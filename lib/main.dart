@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:geobible/settings/app_routes.dart';
 import 'package:geobible/factory/person_factory.dart';
 import 'package:geobible/modules/home/composer/usecases/create_person_usecase.dart';
 import 'package:geobible/modules/home/composer/usecases/delete_person_usecase.dart';
 import 'package:geobible/modules/home/composer/usecases/stream_persons_usecase.dart';
 import 'package:geobible/modules/home/composer/usecases/update_person_usecase.dart';
 import 'package:geobible/modules/home/view/pages/add_person_page.dart';
-import 'package:provider/provider.dart';
+
+// Google Fonts
 import 'package:google_fonts/google_fonts.dart';
-import 'package:geobible/settings/app_routes.dart';
-import 'firebase_options.dart';
 
 // Firebase
+import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 // Pages of home
