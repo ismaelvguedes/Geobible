@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "541454661814",
+    "project_id": "geobible",
+    "storage_bucket": "geobible.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:541454661814:android:b06d4365c103d9ea88ce17",
+        "android_client_info": {
+          "package_name": "com.dephino.geobible"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkZuOCtWlv5YXvFf4UIPSeqf2Rs3TJwaY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:541454661814:android:5652cfba77e599af88ce17",
+        "android_client_info": {
+          "package_name": "com.example.geobible"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkZuOCtWlv5YXvFf4UIPSeqf2Rs3TJwaY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

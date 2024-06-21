@@ -1,3 +1,3 @@
 class HomeConstants {
-  static const String titleAppBar = "Home";  
+  static const String titleAppBar = "GeoBible";  
 }

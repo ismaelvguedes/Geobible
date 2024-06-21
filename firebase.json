@@ -1,0 +1,22 @@
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "geobible",
+                    "appId": "1:541454661814:android:5652cfba77e599af88ce17",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "geobible",
+                    "configurations": {
+                        "android": "1:541454661814:android:5652cfba77e599af88ce17",
+                        "web": "1:541454661814:web:16c7dc22d130715388ce17"
+                    }
+                }
+            }
+        }
+    }
+}
