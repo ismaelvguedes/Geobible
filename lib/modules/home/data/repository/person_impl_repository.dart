@@ -14,7 +14,9 @@ class PersonImplRepository implements PersonRepository {
 
   @override
   void createPerson(Person person) {
-    services.createPerson(person.toMap());
+    final result = person.toMap();
+    result.remove("id");
+    services.createPerson(result);
   }
 
   @override

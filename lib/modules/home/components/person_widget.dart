@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:geobible/modules/home/data/model/person.dart';
 import 'package:geobible/settings/app_routes.dart';
 
+// ignore: constant_identifier_names
+const Map PATH_SEX_IMAGE = {
+  "homem": "assets/images/any_men.jpg",
+  "mulher": "assets/images/any_women.jpg",
+  "undefined": "assets/images/undefined.jpg",
+};
+
 class PersonWidget extends StatelessWidget {
   final Person person;
   const PersonWidget({
@@ -25,7 +32,12 @@ class PersonWidget extends StatelessWidget {
       description = "Sem descrição";
     }
 
-    ImageProvider image = person.imageURL.isEmpty ? const NetworkImage("https://img.freepik.com/premium-vector/silhouette-adult-young-anonymous-man-white-background_464863-1235.jpg") : Image.network(person.imageURL).image;
+    ImageProvider image;
+    if (person.imageURL.isEmpty) {
+      image = AssetImage(PATH_SEX_IMAGE[person.sex]);
+    } else {
+      image = Image.network(person.imageURL).image;
+    }
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
