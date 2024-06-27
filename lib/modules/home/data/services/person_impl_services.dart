@@ -4,6 +4,7 @@ import 'package:geobible/modules/home/data/model/person.dart';
 
 class PersonImplService implements PersonServices {
   final store = FirebaseFirestore.instance;
+  
   @override
   Stream<List<Person>> streamPersons() {
     final snapshot = store
@@ -34,5 +35,10 @@ class PersonImplService implements PersonServices {
   @override
   void deletePerson(String ref) {
     store.collection('persons').doc(ref).delete();
+  }
+
+  @override
+  Future<DocumentSnapshot<Map<String, dynamic>>> getPersonByRef(String ref) async {
+    return await store.doc(ref).get();
   }
 }

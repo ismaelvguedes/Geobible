@@ -3,7 +3,7 @@ import 'package:geobible/settings/app_routes.dart';
 import 'package:provider/provider.dart';
 import 'package:geobible/modules/home/components/person_widget.dart';
 import 'package:geobible/modules/home/controller/home_controller.dart';
-import 'package:geobible/modules/home/settings/home_constants.dart';
+import 'package:geobible/modules/home/utils/home_constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,8 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _searchQuery = "";
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,51 +38,51 @@ class _HomePageState extends State<HomePage> {
                 hintText: "Pesquise um nome",
               ),
               onChanged: (String query) {
-                setState(() {
-                  _searchQuery = query;
-                });
+                context.read<HomeController>().searchPerson = query;
               },
             ),
           ),
-          StreamBuilder(
-            stream: context.read<HomeController>().streamPersons(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                      vertical: 10.0,
+          Consumer<HomeController>(
+            builder: (context, homeController, child) => StreamBuilder(
+              stream: homeController.streamPersons(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.0,
+                        vertical: 10.0,
+                      ),
+                      child: Column(
+                        children: [
+                          Text("Não existem personagens cadastrados!!"),
+                        ],
+                      ),
                     ),
-                    child: Column(
-                      children: [
-                        Text("Não existem personagens cadastrados!!"),
-                      ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final filteredItems = snapshot.data!.where((item) {
+                    return item.name.toLowerCase().contains(homeController
+                        .searchPerson
+                        .toLowerCase());
+                  }).toList();
+                  filteredItems.sort((a, b) => a.name.compareTo(b.name));
+                  return Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      itemCount: filteredItems.length,
+                      itemBuilder: (context, id) => PersonWidget(
+                        person: filteredItems[id],
+                      ),
                     ),
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                final filteredItems = snapshot.data!.where((item) {
-                  return item.name
-                      .toLowerCase()
-                      .contains(_searchQuery.toLowerCase());
-                }).toList();
-                filteredItems.sort((a, b) => a.name.compareTo(b.name));
-                return Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    itemCount: filteredItems.length,
-                    itemBuilder: (context, id) => PersonWidget(
-                      person: filteredItems[id],
-                    ),
-                  ),
-                );
-              }
-            },
+                  );
+                }
+              },
+            ),
           ),
         ],
       ),

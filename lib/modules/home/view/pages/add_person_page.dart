@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geobible/modules/home/controller/home_controller.dart';
-import 'package:geobible/modules/home/data/model/person.dart';
-import 'package:provider/provider.dart';
 
 class TextInputFormIcon extends StatelessWidget {
   final IconData icon;
@@ -65,10 +62,10 @@ class AddPersonPage extends StatefulWidget {
 }
 
 class _AddPersonPageState extends State<AddPersonPage> {
+  
   String imageURL = "";
   bool enabled = true;
   final _formKey = GlobalKey<FormState>();
-
 
   final _fName = FocusNode();
   final _fImageURL = FocusNode();
@@ -214,16 +211,6 @@ class _AddPersonPageState extends State<AddPersonPage> {
                       content: Text('Salvando'),
                     ),
                   );
-                  var person = Person(
-                    id: "",
-                    name: _cName.text,
-                    description: _cDescription.text,
-                    imageURL: _cImageURL.text,
-                    sex: _cSex.text,
-                    ref: _cRef.text,
-                  );
-                  context.read<HomeController>().createPerson(person);
-                  Navigator.of(context).pop();
                 } else {
                   setState(() {
                     enabled = true;

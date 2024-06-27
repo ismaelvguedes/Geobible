@@ -5,4 +5,5 @@ abstract class PersonRepository {
   void createPerson(Person person);
   void updatePerson(Person person);
   void deletePerson(Person person);
+  Future<Person> getPersonByRef(String ref);
 }

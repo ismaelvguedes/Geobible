@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geobible/modules/home/composer/usecases/get_person_usecase.dart';
 import 'package:provider/provider.dart';
 import 'package:geobible/settings/app_routes.dart';
 import 'package:geobible/factory/person_factory.dart';
@@ -18,7 +19,6 @@ import 'package:firebase_core/firebase_core.dart';
 // Pages of home
 import 'package:geobible/modules/home/view/pages/home_page.dart';
 import 'package:geobible/modules/home/controller/home_controller.dart';
-import 'package:geobible/modules/home/view/pages/detail_person_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
             createPersonUsecase: CreatePersonUsecase(repository: PersonFactory.repository),
             updatePersonUsecase: UpdatePersonUsecase(repository: PersonFactory.repository),
             deletePersonUsecase: DeletePersonUsecase(repository: PersonFactory.repository),
+            getPersonUsecase: GetPersonUsecase(repository: PersonFactory.repository),
           ),
         )
       ],
@@ -53,7 +54,6 @@ class MyApp extends StatelessWidget {
         initialRoute: AppRoutes.HOME,
         routes: {
           AppRoutes.HOME: (context) => const HomePage(),
-          AppRoutes.DETAIL_PERSON: (context) => const DetailPersonPage(),
           AppRoutes.ADD_PERSON: (context) => const AddPersonPage(),
         },
       ),

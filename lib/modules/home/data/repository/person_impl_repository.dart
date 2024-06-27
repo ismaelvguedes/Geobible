@@ -21,11 +21,28 @@ class PersonImplRepository implements PersonRepository {
 
   @override
   void updatePerson(Person person) {
-    services.updatePerson(person.id, person.toMap());
+    if (person.id != null) {
+      services.updatePerson(person.id!, person.toMap());
+    }
   }
 
   @override
   void deletePerson(Person person) {
-    services.deletePerson(person.id);
+    if (person.id != null) {
+      services.deletePerson(person.id!);
+    }
+  }
+
+  @override
+  Future<Person> getPersonByRef(String ref) async {
+    if (ref.isNotEmpty) {
+      try {
+        return Person.fromFirestore(await services.getPersonByRef(ref), null);
+      } catch (e) {
+        return Future.error("Error na refêrencia de person: $e");
+      }
+    } else {
+      return Future.error("Refêrencia não existe");
+    }
   }
 }

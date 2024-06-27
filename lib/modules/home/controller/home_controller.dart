@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geobible/modules/home/composer/usecases/create_person_usecase.dart';
 import 'package:geobible/modules/home/composer/usecases/delete_person_usecase.dart';
+import 'package:geobible/modules/home/composer/usecases/get_person_usecase.dart';
 import 'package:geobible/modules/home/composer/usecases/stream_persons_usecase.dart';
 import 'package:geobible/modules/home/composer/usecases/update_person_usecase.dart';
 import 'package:geobible/modules/home/data/model/person.dart';
@@ -10,14 +11,27 @@ class HomeController with ChangeNotifier {
   final CreatePersonUsecase createPersonUsecase;
   final UpdatePersonUsecase updatePersonUsecase;
   final DeletePersonUsecase deletePersonUsecase;
+  final GetPersonUsecase getPersonUsecase;
 
   bool isProgress = false;
+
+  String _searchPerson = '';
+
+  String get searchPerson {
+    return _searchPerson;
+  }
+
+  set searchPerson (String value) {
+    _searchPerson = value;
+    update();
+  }
 
   HomeController({
     required this.streamPersonsUsecase,
     required this.createPersonUsecase,
     required this.updatePersonUsecase,
     required this.deletePersonUsecase,
+    required this.getPersonUsecase,
   });
 
   void update() {
@@ -48,5 +62,9 @@ class HomeController with ChangeNotifier {
 
   void deletePerson(Person person) {
     deletePersonUsecase.execute(person);
+  }
+
+  Future<Person> getPerson(String ref) async{
+    return getPersonUsecase.execute(ref);
   }
 }

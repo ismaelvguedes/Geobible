@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geobible/modules/home/data/model/person.dart';
-import 'package:geobible/settings/app_routes.dart';
-
+import 'package:geobible/modules/home/components/detail_person_widget.dart';
+import 'package:geobible/modules/home/utils/home_functions.dart';
 // ignore: constant_identifier_names
-const Map PATH_SEX_IMAGE = {
-  "homem": "assets/images/any_men.jpg",
-  "mulher": "assets/images/any_women.jpg",
-  "undefined": "assets/images/undefined.jpg",
-};
+
 
 class PersonWidget extends StatelessWidget {
   final Person person;
@@ -28,16 +24,11 @@ class PersonWidget extends StatelessWidget {
       }
       description = preloadDescription.join(' ');
     }
-    if(person.description.isEmpty){
+    if (person.description.isEmpty) {
       description = "Sem descrição";
     }
 
-    ImageProvider image;
-    if (person.imageURL.isEmpty) {
-      image = AssetImage(PATH_SEX_IMAGE[person.sex]);
-    } else {
-      image = Image.network(person.imageURL).image;
-    }
+    ImageProvider image = HomeFunctions.imageLoadPerson(person.sex, person.imageURL);
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
@@ -89,10 +80,17 @@ class PersonWidget extends StatelessWidget {
             ],
           ),
           IconButton(
-            icon: const Icon(Icons.arrow_forward_ios_rounded),
-            onPressed: () => Navigator.of(context).pushNamed(
-              AppRoutes.DETAIL_PERSON,
-            ),
+            icon: const Icon(Icons.info),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.white,
+                builder: (context) => DetailPersonWidget(
+                  image: image,
+                  person: person,
+                ),
+              );
+            },
           ),
         ],
       ),
