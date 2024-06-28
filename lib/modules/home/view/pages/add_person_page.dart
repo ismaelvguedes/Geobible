@@ -1,58 +1,11 @@
 import 'package:flutter/material.dart';
-
-class TextInputFormIcon extends StatelessWidget {
-  final IconData icon;
-  final String hintText;
-  final TextEditingController controller;
-  final FocusNode focus;
-  final FocusNode? nextFocus;
-  final Function(String value)? onChanged;
-  final String? initialValue;
-  final Function(String? value)? onSaved;
-  final String? Function(String? value)? validator;
-  const TextInputFormIcon({
-    super.key,
-    required this.controller,
-    required this.focus,
-    this.nextFocus,
-    required this.icon,
-    required this.hintText,
-    this.initialValue,
-    this.onChanged,
-    this.onSaved,
-    this.validator,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Colors.grey),
-        color: Colors.white,
-      ),
-      child: TextFormField(
-        initialValue: initialValue,
-        controller: controller,
-        focusNode: focus,
-        
-        cursorColor: Colors.amber[800],
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.only(top: 12),
-          prefixIcon: Icon(icon),
-          hintText: hintText,
-        ),
-        onChanged: onChanged,
-        onSaved: onSaved,
-        onFieldSubmitted: (value) {
-          FocusScope.of(context).requestFocus(nextFocus);
-        },
-        validator: validator,
-      ),
-    );
-  }
-}
+import 'package:geobible/modules/home/components/person_select.dart';
+import 'package:geobible/modules/home/components/radio_button.dart';
+import 'package:geobible/modules/home/components/reference_input.dart';
+import 'package:geobible/modules/home/components/text_input_form_icon.dart';
+import 'package:geobible/modules/home/controller/home_controller.dart';
+import 'package:geobible/modules/home/data/model/person.dart';
+import 'package:provider/provider.dart';
 
 class AddPersonPage extends StatefulWidget {
   const AddPersonPage({super.key});
@@ -62,22 +15,24 @@ class AddPersonPage extends StatefulWidget {
 }
 
 class _AddPersonPageState extends State<AddPersonPage> {
-  
   String imageURL = "";
-  bool enabled = true;
+  bool loading = false;
+  bool _hasFather = false;
+  bool _hasMother = false;
   final _formKey = GlobalKey<FormState>();
 
   final _fName = FocusNode();
   final _fImageURL = FocusNode();
   final _fDescription = FocusNode();
-  final _fSex = FocusNode();
   final _fRef = FocusNode();
 
   final _cName = TextEditingController();
   final _cImageURL = TextEditingController();
   final _cDescription = TextEditingController();
-  final _cSex = TextEditingController();
+  final _cSex = TextEditingController(text: "homem");
   final _cRef = TextEditingController();
+  final _cFather = TextEditingController();
+  final _cMother = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -151,73 +106,147 @@ class _AddPersonPageState extends State<AddPersonPage> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    TextInputFormIcon(
-                      icon: Icons.book,
-                      controller: _cRef,
-                      focus: _fRef,
-                      nextFocus: _fSex,
-                      hintText: "Insira uma refêrencia",
-                      onSaved: (value) {
-                        return value ?? "";
-                      },
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Obrigatório";
-                        }
-                        return null;
+                    ReferenceInput(
+                      onSaved: (ref) {
+                        _cRef.text = ref;
                       },
                     ),
                     const SizedBox(height: 20),
-                    TextInputFormIcon(
-                      icon: Icons.person_search_sharp,
-                      controller: _cSex,
-                      focus: _fSex,
-                      hintText: "Insira o sexo(homem ou mulher)",
-                      onSaved: (value) {
-                        return value ?? "";
-                      },
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Obrigatório";
-                        }
-                        return null;
+                    RadioButton(
+                      label: "Sexo:",
+                      options: const ["Homem", "Mulher"],
+                      selectOption: (key, value) {
+                        _cSex.text = value.toLowerCase();
                       },
                     ),
+                    const SizedBox(height: 20),
+                    RadioButton(
+                      selectedValue: 1,
+                      label: "Tem pai:",
+                      options: const ["Sim", "Não"],
+                      selectOption: (key, value) {
+                        setState(() {
+                          if (value == "Sim") {
+                            _hasFather = true;
+                          } else {
+                            _hasFather = false;
+                          }
+                          _cFather.text = "";
+                        });
+                      },
+                    ),
+                    if (_hasFather) ...[
+                      const SizedBox(height: 20),
+                      PersonSelect(
+                        label: "Selecione o pai:",
+                        onFilter: (person) => person.sex == "homem",
+                        onSelected: (person) =>
+                            _cFather.text = person?.id ?? "",
+                      )
+                    ],
+                    const SizedBox(height: 20),
+                    RadioButton(
+                      selectedValue: 1,
+                      label: "Tem mãe:",
+                      options: const ["Sim", "Não"],
+                      selectOption: (key, value) {
+                        setState(() {
+                          if (value == "Sim") {
+                            _hasMother = true;
+                          } else {
+                            _hasMother = false;
+                          }
+                          _cMother.text = "";
+                        });
+                      },
+                    ),
+                    if (_hasMother) ...[
+                      const SizedBox(height: 20),
+                      PersonSelect(
+                        label: "Selecione a mãe:",
+                        onFilter: (person) => person.sex == "mulher",
+                        onSelected: (person) =>
+                            _cMother.text = person?.id ?? "",
+                      )
+                    ],
+                    const SizedBox(height: 20),
+                    InkWell(
+                      onTap: !loading
+                          ? () {
+                              if (_formKey.currentState!.validate()) {
+                                setState(() {
+                                  loading = true;
+                                });
+                                debugPrint([
+                                  _cImageURL.text,
+                                  _cName.text,
+                                  _cDescription.text,
+                                  _cRef.text,
+                                  _cSex.text,
+                                  _cFather.text,
+                                  _cMother.text
+                                ].toString());
+                                context
+                                    .read<HomeController>()
+                                    .createPerson(
+                                      Person(
+                                        imageURL: _cImageURL.text,
+                                        name: _cName.text,
+                                        description: _cDescription.text,
+                                        ref: _cRef.text,
+                                        sex: _cSex.text,
+                                        father: _cFather.text,
+                                        mother: _cMother.text,
+                                      ),
+                                    )
+                                    .then(
+                                  (value) {
+                                    Navigator.of(context).pop();
+                                    context
+                                    .read<HomeController>().searchPerson = _cName.text;
+                                  },
+                                );
+                              } else {
+                                setState(() {
+                                  loading = false;
+                                });
+                              }
+                            }
+                          : null,
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 20,
+                        ),
+                        decoration: BoxDecoration(
+                          color: !loading ? Colors.amber[800] : Colors.grey,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                          child: !loading
+                              ? const Text(
+                                  'SALVAR',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              : SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                      color: Colors.grey[800])),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 40),
                   ],
                 ),
               )
             ],
           ),
         ),
-      ),
-      floatingActionButton: IconButton.filled(
-        style: IconButton.styleFrom(
-          backgroundColor: enabled ? Colors.amber[800] : Colors.grey,
-          padding: const EdgeInsets.all(15),
-        ),
-        icon: const Icon(
-          Icons.save,
-          size: 30,
-        ),
-        color: Colors.black,
-        onPressed: enabled
-            ? () {
-                if (_formKey.currentState!.validate()) {
-                  setState(() {
-                    enabled = false;
-                  });
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Salvando'),
-                    ),
-                  );
-                } else {
-                  setState(() {
-                    enabled = true;
-                  });
-                }
-              }
-            : null,
       ),
     );
   }

@@ -7,7 +7,7 @@ class DeletePersonUsecase {
     required this.repository,
   });
 
-  void execute(Person person) {
-    return repository.deletePerson(person);
+  Future<void> execute(Person person) async{
+    return await repository.deletePerson(person);
   }
 }

@@ -15,15 +15,19 @@ class HomeController with ChangeNotifier {
 
   bool isProgress = false;
 
-  String _searchPerson = '';
+  final TextEditingController _searchPerson = TextEditingController(text: '');
 
   String get searchPerson {
-    return _searchPerson;
+    return _searchPerson.text;
   }
 
-  set searchPerson (String value) {
-    _searchPerson = value;
+  set searchPerson(String value) {
+    _searchPerson.text = value;
     update();
+  }
+
+  TextEditingController get searchController {
+    return _searchPerson;
   }
 
   HomeController({
@@ -52,19 +56,19 @@ class HomeController with ChangeNotifier {
     return streamPersonsUsecase.execute();
   }
 
-  void createPerson(Person person) {
-    createPersonUsecase.execute(person);
+  Future<void> createPerson(Person person) async {
+    await createPersonUsecase.execute(person);
   }
 
-  void updatePerson(Person person) {
-    updatePersonUsecase.execute(person);
+  Future<void> updatePerson(Person person) async {
+    await updatePersonUsecase.execute(person);
   }
 
-  void deletePerson(Person person) {
-    deletePersonUsecase.execute(person);
+  Future<void> deletePerson(Person person) async {
+    await deletePersonUsecase.execute(person);
   }
 
-  Future<Person> getPerson(String ref) async{
+  Future<Person> getPerson(String ref) async {
     return getPersonUsecase.execute(ref);
   }
 }

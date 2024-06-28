@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:geobible/modules/home/data/model/person.dart';
-import 'package:geobible/modules/home/components/detail_person_widget.dart';
 import 'package:geobible/modules/home/utils/home_functions.dart';
 // ignore: constant_identifier_names
 
 
 class PersonWidget extends StatelessWidget {
   final Person person;
+  final List<Widget> actions;
   const PersonWidget({
     super.key,
     required this.person,
+    required this.actions,
   });
 
   @override
@@ -79,19 +80,7 @@ class PersonWidget extends StatelessWidget {
               ),
             ],
           ),
-          IconButton(
-            icon: const Icon(Icons.info),
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                backgroundColor: Colors.white,
-                builder: (context) => DetailPersonWidget(
-                  image: image,
-                  person: person,
-                ),
-              );
-            },
-          ),
+          ...actions,
         ],
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geobible/modules/home/data/model/person.dart';
 import 'package:geobible/modules/home/components/tag_parent_widget.dart';
+import 'package:geobible/modules/home/utils/home_functions.dart';
 
 const TextStyle textStyle = TextStyle(
   fontSize: 20,
@@ -10,15 +11,14 @@ const TextStyle textStyle = TextStyle(
 class DetailPersonWidget extends StatelessWidget {
   const DetailPersonWidget({
     super.key,
-    required this.image,
     required this.person,
   });
 
-  final ImageProvider<Object> image;
   final Person person;
 
   @override
   Widget build(BuildContext context) {
+    ImageProvider<Object> image = HomeFunctions.imageLoadPerson(person.sex, person.imageURL);
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -111,11 +111,3 @@ class DetailPersonWidget extends StatelessWidget {
     );
   }
 }
-
-/**
- * person.father.isNotEmpty
-                        ? 
-                        : const SizedBox(
-                            child: Text("Não possui"),
-                          )
- */

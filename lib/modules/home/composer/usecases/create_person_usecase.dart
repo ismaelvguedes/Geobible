@@ -7,7 +7,7 @@ class CreatePersonUsecase {
     required this.repository,
   });
 
-  void execute(Person person) {
-    return repository.createPerson(person);
+  Future<void> execute(Person person) async{
+    await repository.createPerson(person);
   }
 }

@@ -7,7 +7,7 @@ class UpdatePersonUsecase {
     required this.repository,
   });
 
-  void execute(Person person) {
-    return repository.updatePerson(person);
+  Future<void> execute(Person person) async{
+    return await repository.updatePerson(person);
   }
 }

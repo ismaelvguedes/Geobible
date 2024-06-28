@@ -13,23 +13,29 @@ class PersonImplRepository implements PersonRepository {
   }
 
   @override
-  void createPerson(Person person) {
+  Future<void> createPerson(Person person) async{
     final result = person.toMap();
     result.remove("id");
-    services.createPerson(result);
+    if (result["father"].isNotEmpty) {
+      result["father"] = "persons/${result["father"]}";
+    }
+    if (result["mother"].isNotEmpty) {
+      result["mother"] = "persons/${result["mother"]}";
+    }
+    await services.createPerson(result);
   }
 
   @override
-  void updatePerson(Person person) {
+  Future<void> updatePerson(Person person) async{
     if (person.id != null) {
-      services.updatePerson(person.id!, person.toMap());
+      await services.updatePerson(person.id!, person.toMap());
     }
   }
 
   @override
-  void deletePerson(Person person) {
+  Future<void> deletePerson(Person person) async{
     if (person.id != null) {
-      services.deletePerson(person.id!);
+      await services.deletePerson(person.id!);
     }
   }
 

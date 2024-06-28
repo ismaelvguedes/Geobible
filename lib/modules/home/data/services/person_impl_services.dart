@@ -23,18 +23,18 @@ class PersonImplService implements PersonServices {
   }
 
   @override
-  void createPerson(Map<String, dynamic> data) {
-    store.collection('persons').add(data);
+  Future<void> createPerson(Map<String, dynamic> data) async{
+    await store.collection('persons').add(data);
   }
 
   @override
-  void updatePerson(String ref, Map<String, dynamic> data) {
-    store.collection('persons').doc(ref).update(data);
+  Future<void> updatePerson(String ref, Map<String, dynamic> data) async{
+    await store.collection('persons').doc(ref).update(data);
   }
 
   @override
-  void deletePerson(String ref) {
-    store.collection('persons').doc(ref).delete();
+  Future<void> deletePerson(String ref) async{
+    await store.collection('persons').doc(ref).delete();
   }
 
   @override

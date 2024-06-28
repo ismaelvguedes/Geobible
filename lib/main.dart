@@ -37,11 +37,16 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<HomeController>(
           create: (context) => HomeController(
-            streamPersonsUsecase: StreamPersonsUsecase(repository: PersonFactory.repository),
-            createPersonUsecase: CreatePersonUsecase(repository: PersonFactory.repository),
-            updatePersonUsecase: UpdatePersonUsecase(repository: PersonFactory.repository),
-            deletePersonUsecase: DeletePersonUsecase(repository: PersonFactory.repository),
-            getPersonUsecase: GetPersonUsecase(repository: PersonFactory.repository),
+            streamPersonsUsecase:
+                StreamPersonsUsecase(repository: PersonFactory.repository),
+            createPersonUsecase:
+                CreatePersonUsecase(repository: PersonFactory.repository),
+            updatePersonUsecase:
+                UpdatePersonUsecase(repository: PersonFactory.repository),
+            deletePersonUsecase:
+                DeletePersonUsecase(repository: PersonFactory.repository),
+            getPersonUsecase:
+                GetPersonUsecase(repository: PersonFactory.repository),
           ),
         )
       ],
@@ -49,6 +54,11 @@ class MyApp extends StatelessWidget {
         title: "GeoBible",
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.amber[400]!,
+            brightness: Brightness.light,
+          ),
           textTheme: GoogleFonts.aBeeZeeTextTheme(),
         ),
         initialRoute: AppRoutes.HOME,
